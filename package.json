@@ -1,0 +1,22 @@
+{
+  "name": "piano-roll-demo",
+  "version": "1.0.0",
+  "description": "A quick demo of web audio capability using Tone.js in the style of a DAW piano roll",
+  "main": "index.html",
+  "dependencies": {
+    "startaudiocontext": "^1.2.0",
+    "tone": "^0.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "na"
+  },
+  "keywords": [
+    "piano",
+    "roll",
+    "audio",
+    "synth"
+  ],
+  "author": "Marc Clayton",
+  "license": "ISC"
+}

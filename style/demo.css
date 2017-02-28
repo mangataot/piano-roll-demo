@@ -1,0 +1,90 @@
+/*-----*/
+body {
+	background-color: #444;
+}
+#pr-container {
+    float: left;
+    height: 100%;
+    overflow: hidden;
+
+}
+
+#pr {
+    position: relative;
+    width: 1200px;
+    padding-bottom: 50px;
+}
+
+
+/*-----*/
+
+
+#canvas-ui {
+    position: absolute;
+    top: 0;
+	height: 380px;
+    z-index: 1;
+}
+#canvas-event {
+    position: absolute;
+    left: 120px;
+    top: 0;
+	height: 380px;
+    z-index: 2;
+}
+
+
+/*-----*/
+
+.ui-el-format.button {
+	text-align: center;
+	letter-spacing: 0px;
+	padding: 12px 8px 8px 6px;
+	background-color: #006699;
+}
+
+#transport-bar{
+	position: absolute;
+	top: 400px;
+	width:99%;
+	background-color: #333;
+	overflow:hidden
+}
+
+#start-stop-button {
+	
+}
+
+.button.tempo {
+	width: 60px;
+}
+
+
+.ui-el-format {
+	float: left;
+	text-align: left;
+	width: 136px;
+	height: 30px;
+	margin: 6px;
+	padding: 12px 6px 6px 52px;
+	background-color: #343;
+	color: #fff;
+	font-family: 'Russo One', sans-serif;
+	font-size: 22px;
+	letter-spacing: 8px;
+}
+
+#tempo-display {
+	width: 180px;
+}
+
+/*-----*/ 
+
+
+.arrow {
+  height: 30px;
+  fill: #fff;
+}
+.up{top:-9px;}
+.down{bottom:-9px;}
+

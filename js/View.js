@@ -48,25 +48,22 @@ function initAll() {
 		//audio context is started
 		console.log('audio context is started')
 	});
-	
+	function tempoInc() {
+		Tone.Transport.bpm.value = Math.round(Tone.Transport.bpm.value) + tempoStep;
+		updateTempo();
+		eventsDrawMngr.storeEventPosDraw('none');
+		transportMan.refreshLoopTime();
+	}
+	function tempoDec() {
+		Tone.Transport.bpm.value = Math.round(Tone.Transport.bpm.value) - tempoStep;
+		updateTempo();
+		eventsDrawMngr.storeEventPosDraw('none');
+		transportMan.refreshLoopTime();
+	}
+	function updateTempo() {
+		document.getElementById('tempo-display').innerHTML=Math.round(Tone.Transport.bpm.value)+' BPM';
+	}
 }
-	
-function tempoInc() {
-	Tone.Transport.bpm.value = Math.round(Tone.Transport.bpm.value) + tempoStep;
-	updateTempo();
-	eventsDrawMngr.storeEventPosDraw('none');
-	transportMan.refreshLoopTime();
-}
-function tempoDec() {
-	Tone.Transport.bpm.value = Math.round(Tone.Transport.bpm.value) - tempoStep;
-	updateTempo();
-	eventsDrawMngr.storeEventPosDraw('none');
-	transportMan.refreshLoopTime();
-}
-function updateTempo() {
-	document.getElementById('tempo-display').innerHTML=Math.round(Tone.Transport.bpm.value)+' BPM';
-}
-
 
 function clickFn() {
 	console.log('click');
@@ -117,8 +114,10 @@ class TransportManager {
 		{
 			//clear old playhead from canvas
 			this.myContext.clearRect(last_x-1, 0, 2, this.myCanvas.height);
+			
 			//redraw the note currently under the playhead
 			this.noteObj = this.keyboard.keys[storeNoteTime[this.lastEventNo].note];
+			
 			this.noteDur = storeNoteTime[this.lastEventNo].end - storeNoteTime[this.lastEventNo].start;
 			this.eventsDrawMngr.drawEvent(this.noteObj, storeNoteTime[this.lastEventNo].start, this.noteDur, this.loopTime, '#79cc00');
 			if (!stopProcess && Tone.Transport.state=='started')//Only do when playing but is skipped after last event has been processed. 

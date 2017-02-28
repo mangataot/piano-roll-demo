@@ -159,7 +159,7 @@ class TransportManager {
 	}
 	doKeyClear(eventNo){
 		//console.log('doKeyClear:'+eventNo);
-		if (eventNo > 0)
+		if (eventNo >= 0)
 		{
 			if (Tone.Transport.seconds > storeNoteTime[eventNo].end)
 			{

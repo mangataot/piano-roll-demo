@@ -18,5 +18,9 @@
     "synth"
   ],
   "author": "Marc Clayton",
-  "license": "ISC"
+  "license": "ISC",
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/mangataot/piano-roll-demo.git"
+  }
 }

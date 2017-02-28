@@ -125,16 +125,19 @@ class TransportManager {
 				if (Tone.Transport.seconds > storeNoteTime[this.eventNo].start)
 				{	
 					this.keyboard.highlightNote(this.keyboard.keys[storeNoteTime[this.eventNo].note]);
+					console.log('doKeyHighlight:'+this.eventNo);
 					this.lastEventNo = this.eventNo++;
 					if (this.eventNo == storeNoteTime.length) //out of events till next cycle
 					{
 						stopProcess = true;
 					}
 				}
-				else if (Tone.Transport.seconds > storeNoteTime[this.eventNo-1].end)
-				{
-					this.keyboard.unhighlightNote(this.keyboard.keys[storeNoteTime[this.eventNo - 1].note]);
+				else {
+					//clear last two events on the keyboard
+					this.doKeyClear(this.eventNo-1);
+					this.doKeyClear(this.eventNo-2);
 				}
+					
 				document.getElementById('time-display').innerHTML = Tone.Transport.position.substr(0,5)
 				
 			}
@@ -152,6 +155,16 @@ class TransportManager {
 			stopProcess = false;
 			if (storeNoteTime[0]!=undefined) this.keyboard.unhighlightNote(this.keyboard.keys[storeNoteTime[storeNoteTime.length - 1].note]);
 			this.eventsDrawMngr.storeEventPosDraw('redraw');
+		}
+	}
+	doKeyClear(eventNo){
+		//console.log('doKeyClear:'+eventNo);
+		if (eventNo > 0)
+		{
+			if (Tone.Transport.seconds > storeNoteTime[eventNo].end)
+			{
+				this.keyboard.unhighlightNote(this.keyboard.keys[storeNoteTime[eventNo].note]);
+			}
 		}
 	}
 	start() {

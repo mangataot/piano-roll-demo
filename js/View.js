@@ -3,14 +3,14 @@
 
 var this_x; 
 var last_x;
-var started = false;
+
 var keyWidth = 120;
 var gridWidth = 1000;
 var gridElHeight = 15;
 var startoctave = -1;
 var storeNoteTime = [];
-var stopProcess = false;
-var tempoStep = 5;
+
+
 Tone.Transport.bpm.value = 180;
 
 function initAll() {
@@ -49,47 +49,57 @@ function initAll() {
 		console.log('audio context is started')
 	});
 	function tempoInc() {
-		Tone.Transport.bpm.value = Math.round(Tone.Transport.bpm.value) + tempoStep;
-		updateTempo();
-		eventsDrawMngr.storeEventPosDraw('none');
-		transportMan.refreshLoopTime();
+		if (Tone.Transport.bpm.value < 300)
+		{
+			Tone.Transport.bpm.value = Math.round(Tone.Transport.bpm.value) + transportMan.tempoStep;
+			updateTempo();
+			eventsDrawMngr.storeEventPosDraw('none');
+			transportMan.refreshLoopTime();
+		}
 	}
 	function tempoDec() {
-		Tone.Transport.bpm.value = Math.round(Tone.Transport.bpm.value) - tempoStep;
-		updateTempo();
-		eventsDrawMngr.storeEventPosDraw('none');
-		transportMan.refreshLoopTime();
+		if (Tone.Transport.bpm.value > 0)
+		{
+			Tone.Transport.bpm.value = Math.round(Tone.Transport.bpm.value) - transportMan.tempoStep;
+			updateTempo();
+			eventsDrawMngr.storeEventPosDraw('none');
+			transportMan.refreshLoopTime();
+		}
 	}
 	function updateTempo() {
 		document.getElementById('tempo-display').innerHTML=Math.round(Tone.Transport.bpm.value)+' BPM';
 	}
+	function clickFn() {
+		console.log('click');
+		if (!transportMan.started){
+			Tone.Transport.start("+0.1");
+			transportMan.started = true;
+			document.getElementById('start-stop-button').innerHTML='stop';
+		}
+		else
+		{
+			Tone.Transport.pause();
+			transportMan.started = false;
+			document.getElementById('start-stop-button').innerHTML='start';
+		}
+	}
 }
 
-function clickFn() {
-	console.log('click');
-	if (!started){
-		Tone.Transport.start("+0.1");
-		started = true;
-		document.getElementById('start-stop-button').innerHTML='stop';
-	}
-	else
-	{
-		Tone.Transport.pause();
-		started = false;
-		document.getElementById('start-stop-button').innerHTML='start';
-	}
-}
+
 class TransportManager {
 	constructor(myCanvas, myContext, gridWidth, keyboard, eventsDrawMngr) {
 		this.myCanvas = myCanvas;
 		this.myContext = myContext;
 		this.gridWidth = gridWidth;
+		this.started = false;
 		this.eventNo = 0;
 		this.lastEventNo = 0;
 		this.keyboard = keyboard;
 		this.eventsDrawMngr = eventsDrawMngr;
 		this.loopTime;
 		this.storedTicks = 0;
+		this.tempoStep = 5;
+		this.stopProcess = false;
 		this.refreshLoopTime();
 	}
 	refreshLoopTime() {
@@ -110,7 +120,8 @@ class TransportManager {
 	}
 	redrawFrame() {
 		requestAnimationFrame(this.redrawFrame.bind(this));
-		if (Tone.Transport.ticks >= this.storedTicks) //check if loop from end to start just happened
+		//check if loop from end to start just happened
+		if (Tone.Transport.ticks >= this.storedTicks) 
 		{
 			//clear old playhead from canvas
 			this.myContext.clearRect(last_x-1, 0, 2, this.myCanvas.height);
@@ -120,7 +131,7 @@ class TransportManager {
 			
 			this.noteDur = storeNoteTime[this.lastEventNo].end - storeNoteTime[this.lastEventNo].start;
 			this.eventsDrawMngr.drawEvent(this.noteObj, storeNoteTime[this.lastEventNo].start, this.noteDur, this.loopTime, '#79cc00');
-			if (!stopProcess && Tone.Transport.state=='started')//Only do when playing but is skipped after last event has been processed. 
+			if (!this.stopProcess && Tone.Transport.state=='started')//Only do when playing but is skipped after last event has been processed. 
 			{
 				if (Tone.Transport.seconds > storeNoteTime[this.eventNo].start)
 				{	
@@ -129,7 +140,7 @@ class TransportManager {
 					this.lastEventNo = this.eventNo++;
 					if (this.eventNo == storeNoteTime.length) //out of events till next cycle
 					{
-						stopProcess = true;
+						this.stopProcess = true;
 					}
 				}
 				else {
@@ -152,7 +163,7 @@ class TransportManager {
 			//restart cycle
 			this.eventNo = this.lastEventNo = 0;
 			this.storedTicks = 0;
-			stopProcess = false;
+			this.stopProcess = false;
 			if (storeNoteTime[0]!=undefined) this.keyboard.unhighlightNote(this.keyboard.keys[storeNoteTime[storeNoteTime.length - 1].note]);
 			this.eventsDrawMngr.storeEventPosDraw('redraw');
 		}

@@ -2,6 +2,10 @@
 
 // BASS
 // Bass part is created here in the format used by Tone.Part and is ready to be played in the piano roll
+
+function init() {
+	
+	
 var bass = new Tone.FMSynth({
 	"harmonicity" : 3,
 	"modulationIndex" : 6.5,
@@ -113,9 +117,19 @@ var bassNotes = [{
 	velocity: 0.7
 }];
 
-var bassPart = new Tone.Part(function(time, event) {
+
+	var bassPart = new Tone.Part(function(time, event) {
 		bass.triggerAttackRelease(event.note, event.dur, time, event.velocity);
-}, bassNotes).start(0);
+	}, bassNotes).start(0);
 
+	var uiCanvas = document.getElementById('canvas-ui');
+	var eventCanvas = document.getElementById('canvas-event');
 
+	Tone.Transport.bpm.value = 180;
+	var BPMDisplayEl = document.getElementById('tempo-display');
+	var startBtn = document.getElementById('start-stop-button');
+	var incTempoBtn = document.getElementById('tempo-inc');
+	var decTempoBtn = document.getElementById('tempo-dec');
+	var prd = new PianoRollDemo(uiCanvas, eventCanvas, bassPart, bassNotes, BPMDisplayEl, startBtn, incTempoBtn, decTempoBtn);
 
+}

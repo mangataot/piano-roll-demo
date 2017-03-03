@@ -23,11 +23,11 @@ class PianoRollDemo {
 		var notePData = new NotePosData();
 		var eventsDrawMngr = new EventsDrawManager(startoctave, eventCanvas, eventContext, gridWidth, keyboard, tonePart, toneNotes, notePData);
 		var transportMan = new TransportManager(eventCanvas, eventContext, gridWidth, keyboard, eventsDrawMngr, BPMDisplayEl, startBtn, incTempoBtn, decTempoBtn, notePData);
-		transportMan.start();
 		
 		//on iOS, the context will be started on the first valid user action on the class specified
 		StartAudioContext(Tone.context, startBtn, function(){
 			//audio context is started
+			transportMan.start();
 		});
 	}
 }

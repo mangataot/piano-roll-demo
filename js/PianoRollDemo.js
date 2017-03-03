@@ -22,7 +22,7 @@ class PianoRollDemo {
 	
 		var notePData = new NotePosData();
 		var eventsDrawMngr = new EventsDrawManager(startoctave, eventCanvas, eventContext, gridWidth, keyboard, tonePart, toneNotes, notePData);
-		var transportMan = new TransportManager(eventCanvas, eventContext, gridWidth, keyboard, eventsDrawMngr, BPMDisplayEl, timeDisplay, startBtn, incTempoBtn, decTempoBtn, notePData);
+		var transportMan = new TransportManager(eventCanvas, eventContext, grid, keyboard, eventsDrawMngr, BPMDisplayEl, timeDisplay, startBtn, incTempoBtn, decTempoBtn, notePData);
 		
 		//on iOS, the context will be started on the first valid user action on the class specified
 		StartAudioContext(Tone.context, startBtn, function(){
@@ -39,10 +39,11 @@ class NotePosData {
 }
 
 class TransportManager {
-	constructor(myCanvas, myContext, gridWidth, keyboard, eventsDrawMngr, BPMDisplayEl, timeDisplay, startBtn, incTempoBtn, decTempoBtn, notePData) {
+	constructor(myCanvas, myContext, grid, keyboard, eventsDrawMngr, BPMDisplayEl, timeDisplay, startBtn, incTempoBtn, decTempoBtn, notePData) {
 		this.myCanvas = myCanvas;
 		this.myContext = myContext;
-		this.gridWidth = gridWidth;
+		this.grid = grid;
+		this.gridWidth = grid.gridWidth;
 		this.started = false;
 		this.eventNo = 0;
 		this.lastEventNo = 0;
@@ -75,17 +76,8 @@ class TransportManager {
 	}
 	renderPlayHead() {
 		var progress = Tone.Transport.seconds / Tone.Transport.loopEnd;
-		
-		this.this_x = Math.floor(progress * this.gridWidth);
-		this.myContext.strokeStyle = '#000';
-		this.myContext.beginPath();
-		this.myContext.moveTo(this.this_x, 0);
-		this.myContext.lineTo(this.this_x, this.myCanvas.height);
-		this.myContext.stroke();
-		this.noteDur;
-		this.noteObj;
-		this.last_x = this.this_x;
-	}
+		this.last_x = this.grid.drawGridLineV(this.myContext, this.myCanvas.height, progress);
+	}	
 	redrawFrame() {
 		requestAnimationFrame(this.redrawFrame.bind(this));
 		//check if loop from end to start just happened
@@ -261,31 +253,47 @@ class Grid {
 		this.keys = kb.keys;
 		this.gridWidth = gridWidth;
 		this.keyWidth = keyWidth;
-		this.gridElHeight = gridElHeight
+		this.gridElHeight = gridElHeight;
+		this.xTemp;
 	}
-	drawGridLine(keyPosY, offset) {
+	drawGridLineH(keyPosY, offset) {
 		this.uiContext.beginPath();
 		this.uiContext.moveTo(this.keyWidth, keyPosY+offset);
 		this.uiContext.lineTo(this.gridWidth + this.keyWidth, keyPosY+offset);
 		this.uiContext.stroke();
+	}
+	drawGridLineV(myContext, canvHeight, tNorm) {
+		this.xTemp = Math.floor(tNorm * this.gridWidth);
+		return this.drawLineV(myContext, canvHeight, this.xTemp, '#fff');
+	}
+	drawLineV(myContext, canvHeight, x, col) {
+		myContext.strokeStyle = col;
+		myContext.beginPath();
+		myContext.moveTo(x, 0);
+		myContext.lineTo(x, canvHeight);
+		myContext.stroke();
+		return x;
 	}
 	drawAllGrid(){
 		var flagLastBlack;
 		for (var i = 0; i < this.keys.length; i++) {
 			if (flagLastBlack) 
 			{
-				this.drawGridLine(this.keys[i].y, this.keys[i].height - this.gridElHeight/2);
+				this.drawGridLineH(this.keys[i].y, this.keys[i].height - this.gridElHeight/2);
 				flagLastBlack = false;
 			}
 			else
 			{
-				this.drawGridLine(this.keys[i].y, this.keys[i].height );
+				this.drawGridLineH(this.keys[i].y, this.keys[i].height );
 				if (this.keys[i].black){
 					flagLastBlack = true;
 				}
 			}
 		}
-		this.drawGridLine(this.gridElHeight/2, 0);
+		this.drawGridLineH(this.gridElHeight/2, 0);
+		this.drawLineV(this.uiContext , this.uiCanvas.height, this.gridWidth*0.25 + this.keyWidth, '#555');
+		this.drawLineV(this.uiContext , this.uiCanvas.height, this.gridWidth*0.5 + this.keyWidth, '#555');
+		this.drawLineV(this.uiContext , this.uiCanvas.height, this.gridWidth *0.75 + this.keyWidth, '#555');
 	}
 }
 class Keyboard {
@@ -420,7 +428,7 @@ class PianoKey {
 	    } 
 	}
 	highlight(noteName) {
-		this.context.fillStyle = "#79cc00"; 
+		this.context.fillStyle = "#559900"; 
 		this.context.fillRect(this.width/2, this.y+2, this.width/2, this.height-4);
 	}
 	unhighlight(noteName, fillStyle) {

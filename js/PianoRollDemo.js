@@ -58,12 +58,11 @@ class TransportManager {
 		this.tempoStep = 5;
 		this.stopProcess = false;
 		this.refreshLoopTime();
-		this.refreshView();
+		this.initBtnListeners();
 		this.this_x; 
 		this.last_x;
 	}
-	refreshView() {
-		this.BPMDisplayEl.innerHtml = Math.round(Tone.Transport.bpm.value)+' BPM';
+	initBtnListeners() {
 		//make start button work
 		this.startBtn.addEventListener('click', this.clickFn.bind(this), false);
 		//make tempo buttons work
@@ -179,7 +178,8 @@ class TransportManager {
 		}
 	}
 	start() {
-		this.redrawFrame()
+		this.updateTempo();
+		this.redrawFrame();
 	}
 }
 class EventsDrawManager {

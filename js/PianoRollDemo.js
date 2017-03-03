@@ -1,7 +1,7 @@
 /* Piano Roll Demo - M.Clayton - using ES6 Classes */
 
 class PianoRollDemo {
-	constructor (uiCanvas, eventCanvas, tonePart, toneNotes, BPMDisplayEl, startBtn, incTempoBtn, decTempoBtn) {
+	constructor (uiCanvas, eventCanvas, tonePart, toneNotes, BPMDisplayEl, timeDisplay, startBtn, incTempoBtn, decTempoBtn) {
 		console.log("PianoRollDemo constructor happened!");
 		var startoctave = -1; //these could be added as extended parameters
 		var keyWidth = 120;
@@ -22,7 +22,7 @@ class PianoRollDemo {
 	
 		var notePData = new NotePosData();
 		var eventsDrawMngr = new EventsDrawManager(startoctave, eventCanvas, eventContext, gridWidth, keyboard, tonePart, toneNotes, notePData);
-		var transportMan = new TransportManager(eventCanvas, eventContext, gridWidth, keyboard, eventsDrawMngr, BPMDisplayEl, startBtn, incTempoBtn, decTempoBtn, notePData);
+		var transportMan = new TransportManager(eventCanvas, eventContext, gridWidth, keyboard, eventsDrawMngr, BPMDisplayEl, timeDisplay, startBtn, incTempoBtn, decTempoBtn, notePData);
 		
 		//on iOS, the context will be started on the first valid user action on the class specified
 		StartAudioContext(Tone.context, startBtn, function(){
@@ -39,7 +39,7 @@ class NotePosData {
 }
 
 class TransportManager {
-	constructor(myCanvas, myContext, gridWidth, keyboard, eventsDrawMngr, BPMDisplayEl, startBtn, incTempoBtn, decTempoBtn, notePData) {
+	constructor(myCanvas, myContext, gridWidth, keyboard, eventsDrawMngr, BPMDisplayEl, timeDisplay, startBtn, incTempoBtn, decTempoBtn, notePData) {
 		this.myCanvas = myCanvas;
 		this.myContext = myContext;
 		this.gridWidth = gridWidth;
@@ -49,6 +49,7 @@ class TransportManager {
 		this.keyboard = keyboard;
 		this.eventsDrawMngr = eventsDrawMngr;
 		this.BPMDisplayEl = BPMDisplayEl;
+		this.timeDisplay = timeDisplay;
 		this.startBtn = startBtn;
 		this.incTempoBtn = incTempoBtn;
 		this.decTempoBtn = decTempoBtn;
@@ -116,7 +117,7 @@ class TransportManager {
 						this.doKeyClear(this.eventNo-1);
 						this.doKeyClear(this.eventNo-2);
 					}
-					this.BPMDisplayEl.innerHtml = Tone.Transport.position.substr(0,5)
+					this.timeDisplay.innerHTML = Tone.Transport.position.substr(0,5);
 				}
 			}
 			//then render the play head

@@ -7,7 +7,7 @@ function init() {
 				"pitchDecay" : 0.02,
 				"octaves" : 2,
 				"envelope" : {
-					"attack" : 0.0006,
+					"attack" : 0.006,
 					"decay" : 0.9,
 					"sustain" : 0
 				}
@@ -15,8 +15,25 @@ function init() {
 			
 	var congaPart = new Tone.Sequence(function(time, pitch){
 		conga.triggerAttack(pitch, time, Math.random()*0.4 + 0.2);
-	}, ["G3", "C4", "F4", "C4"], "8n").start(0);
-	conga.volume.value = -12;
+	}, ["G4", "C4", "F4", "C4"], "8n").start(0);
+	conga.volume.value = -16;
+	
+	var bassdr = new Tone.MembraneSynth({
+				"pitchDecay" : 1.2,
+				"octaves" : 1,
+				"envelope" : {
+					"attack" : 0.0006,
+					"decay" : 0.9,
+					"sustain" : 0.02
+				}
+			}).toMaster();
+			
+	var bassdrPart = new Tone.Sequence(function(time, pitch){
+		bassdr.triggerAttack(pitch, time, 0.2);
+	}, ["A1", "A1", "A1", "A1"], "2n").start(0);
+	bassdr.volume.value = 0;
+	
+	
 	
 	var bass = new Tone.FMSynth({
 		"harmonicity" : 3,
@@ -24,12 +41,12 @@ function init() {
 		"carrier" : {
 			"oscillator" : {
 				"type" : "custom",
-				"partials" : [3, 4, 5, 2]
+				"partials" : [6, 8, 5, 2]
 			},
 			"envelope" : {
 				"attack" : 0.08,
 				"decay" : 1.6,
-				"sustain" : 0.9,
+				"sustain" : 0.3,
 			},
 		},
 		"modulator" : {
@@ -39,8 +56,8 @@ function init() {
 			"envelope" : {
 				"attack" : 0.1,
 				"decay" : 1.6,
-				"sustain" : 0.8,
-			"release" : 0.05
+				"sustain" : 0.2,
+			"release" : 0.01
 			},
 		}
 	}).toMaster();

@@ -29,7 +29,6 @@ class PianoRollDemo {
 			//audio context is started
 			transportMan.start();
 		});
-		module.exports = this;
 	}
 }
 class NotePosData {

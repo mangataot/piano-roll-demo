@@ -29,6 +29,7 @@ class PianoRollDemo {
 			//audio context is started
 			transportMan.start();
 		});
+		module.exports = this;
 	}
 }
 class NotePosData {
@@ -309,13 +310,13 @@ class Keyboard {
 		this.keyWidth = keyWidth;
 	}
 	drawNote(key) {
-		if (key == undefined) {
+		if (key === undefined) {
 			return;
 		}
 		key.draw(this.uiContext);
 	}
 	highlightNote(key) {
-		if (key == undefined) {
+		if (key === undefined) {
 			return;
 		}
 		key.highlight(this.uiContext);
@@ -377,18 +378,18 @@ class Keyboard {
 		this.uiCanvas.height = this.height;
 		
 		//draw white keys then black keys to avoid shapes getting obscured on sequential draw
-		for (var i = 0; i < this.keys.length; i++) {
+		for (i = 0; i < this.keys.length; i++) {
 			if (!this.keys[i].black) {
 				this.keys[i].draw(this.uiContext);
 			}
 		}
-		for (var i = 0; i < this.keys.length; i++) {
+		for (i = 0; i < this.keys.length; i++) {
 			if (this.keys[i].black) {
 				this.keys[i].draw(this.uiContext);
 			}
 		}
-	};
-};
+	}
+}
 class PianoKey {
 	constructor (y, height, note, octave, frequency, keyWidth) {
 	    this.octave = octave;
@@ -429,5 +430,5 @@ class PianoKey {
 		this.context.fillStyle = fillStyle;
 		this.context.fillRect(this.width/2, this.y+2, this.width/2, this.height-4);
 	}
-};
+}
 

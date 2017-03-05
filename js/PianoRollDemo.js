@@ -37,7 +37,6 @@ class NotePosData {
 		this.storeNoteTime = [];
 	}
 }
-
 class TransportManager {
 	constructor(myCanvas, myContext, grid, keyboard, eventsDrawMngr, BPMDisplayEl, timeDisplay, startBtn, incTempoBtn, decTempoBtn, notePData) {
 		this.myCanvas = myCanvas;
@@ -115,7 +114,6 @@ class TransportManager {
 			//then render the play head
 			this.renderPlayHead();
 			this.storedTicks = Tone.Transport.ticks;
-			
 		}
 		else
 		{
@@ -235,16 +233,13 @@ class EventsDrawManager {
 			this.notePData.storeNoteTime[bnote] = {note: ind, start: noteStartTime, end: noteStartTime+noteDuration};
 		}
 	}
-	
-	drawEvent(note, noteStartTime, duration, loopTime, fillStyle)
-	{
+	drawEvent(note, noteStartTime, duration, loopTime, fillStyle) {
 	    this.eventContext.fillStyle = '#756382';
 		if (fillStyle!=0)  this.eventContext.fillStyle = fillStyle; //remove
 	    this.eventContext.strokeStyle = '#333';
 	    this.eventContext.lineWidth = 1;
 		this.eventContext.fillRect((noteStartTime / loopTime) * this.gridWidth, note.y, (duration / loopTime) * this.gridWidth, note.height);
 	}
-	
 }
 class Grid {
 	constructor(kb, uiCanvas, gridWidth, keyWidth, gridElHeight) {
@@ -335,7 +330,6 @@ class Keyboard {
 			key.unhighlight(this.uiContext, '#fff');
 		}
 	}
-
 	drawKeyboard(startKey, startOctave, numKeys) {
 		this.height = 0;
 		var notes = ['a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#'];
